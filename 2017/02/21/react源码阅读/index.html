@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <meta name="description" content="version: 16.0.0-alpha.2ReactComponent(./src/iscomorphic/modern/class/ReactBaseClasses.js)constructor(props, context, updater)
+    this.refs = emptyObj" />
+  
+
+  
+  
+  
+  
+  
+  
+  <title>react源码阅读 | Wilson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="version: 16.0.0-alpha.2ReactComponent(./src/iscomorphic/modern/class/ReactBaseClasses.js)constructor(props, context, updater)
+    this.refs = emptyObject
+ReactElement(./src/isomorphic/classic/element/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react源码阅读">
+<meta property="og:url" content="wilson-lin1993.github.io/2017/02/21/react源码阅读/index.html">
+<meta property="og:site_name" content="Wilson">
+<meta property="og:description" content="version: 16.0.0-alpha.2ReactComponent(./src/iscomorphic/modern/class/ReactBaseClasses.js)constructor(props, context, updater)
+    this.refs = emptyObject
+ReactElement(./src/isomorphic/classic/element/">
+<meta property="og:updated_time" content="2017-02-22T03:35:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react源码阅读">
+<meta name="twitter:description" content="version: 16.0.0-alpha.2ReactComponent(./src/iscomorphic/modern/class/ReactBaseClasses.js)constructor(props, context, updater)
+    this.refs = emptyObject
+ReactElement(./src/isomorphic/classic/element/">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+  <!-- baidu webmaster push -->
+  <script src='//push.zhanzhang.baidu.com/push.js'></script>
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+    <hgroup>
+      <h1 class="site-title">
+        <a href="/" title="Wilson" rel="home">Wilson</a>
+      </h1>
+      
+
+      
+    </hgroup>
+
+    <nav id="site-navigation" class="main-navigation" role="navigation">
+            <button class="menu-toggle">菜单</button>
+            <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+            <div class="menu-main-container">
+                <ul id="menu-main" class="nav-menu">
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">Home</a></li>
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">Archives</a></li>
+                
+                </ul>
+            </div>
+    </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-react源码阅读" class="post-react源码阅读 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      react源码阅读
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react源码阅读/" data-id="cizggy3ps0002cve8htgs10e6" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h1 id="version-16-0-0-alpha-2"><a href="#version-16-0-0-alpha-2" class="headerlink" title="version: 16.0.0-alpha.2"></a>version: 16.0.0-alpha.2</h1><h1 id="ReactComponent-src-iscomorphic-modern-class-ReactBaseClasses-js"><a href="#ReactComponent-src-iscomorphic-modern-class-ReactBaseClasses-js" class="headerlink" title="ReactComponent(./src/iscomorphic/modern/class/ReactBaseClasses.js)"></a>ReactComponent(./src/iscomorphic/modern/class/ReactBaseClasses.js)</h1><pre><code>constructor(props, context, updater)
+    this.refs = emptyObject
+</code></pre><h1 id="ReactElement-src-isomorphic-classic-element-ReactElement-js"><a href="#ReactElement-src-isomorphic-classic-element-ReactElement-js" class="headerlink" title="ReactElement(./src/isomorphic/classic/element/ReactElement.js)"></a>ReactElement(./src/isomorphic/classic/element/ReactElement.js)</h1><pre><code>createElement
+==
+</code></pre><h1 id="ReactDom-src-renderers-ReactDOM-js"><a href="#ReactDom-src-renderers-ReactDOM-js" class="headerlink" title="ReactDom(./src/renderers/ReactDOM.js)"></a>ReactDom(./src/renderers/ReactDOM.js)</h1><h1 id="ReactMount-src-renderers-dom-stack-client-ReactMount-js"><a href="#ReactMount-src-renderers-dom-stack-client-ReactMount-js" class="headerlink" title="ReactMount(./src/renderers/dom/stack/client/ReactMount.js)"></a>ReactMount(./src/renderers/dom/stack/client/ReactMount.js)</h1><pre><code>render:
+    return ReactMount._renderSubtreeIntoContainer(null, ...args);
+
+_renderSubtreeIntoContainer
+
+React.createElement(TopLevelWrapper, {child: nextElement})
+    this.rootID = 1
+    render: return this.props.child
+</code></pre><h1 id="inject-src-renderers-dom-stack-client-ReactDOMStackInjection-js"><a href="#inject-src-renderers-dom-stack-client-ReactDOMStackInjection-js" class="headerlink" title="inject(./src/renderers/dom/stack/client/ReactDOMStackInjection.js)"></a>inject(./src/renderers/dom/stack/client/ReactDOMStackInjection.js)</h1><pre><code>初始化
+</code></pre><h1 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h1><pre><code>ReactMount.render(jsx, dom);
+React.createElement(TopLevelWrapper, {child: jsx})
+    type = TopLevelWrapper
+    props.child = jsx
+    childrenLength = 0;
+    return ReactElement(type, null, null, null, null, ReactCurrentOwner.current, {child: jsx})
+
+    ReactElement
+        element = {
+            $$typeof: REACT_ELEMENT_TYPE,
+            type: TopLevelWrapper
+            key: null,
+            ref: null,
+            props: {child: jsx}
+        }
+        return element
+
+nextWrappedElement = element
+prevComponent = getTopLevelWrapperInContainer(dom)    //div nodeType is 1 
+    dom.firstChild == null
+prevComponent = null
+
+reactRootElement = null
+containerHasReactMarkup = false
+containerHasNonRootReactChild = undefined
+
+shouldReuseMarkup = false
+
+component = ReactMount._renderNewRootComponent(nextWrappedElement, container, false, null, null)
+            ._renderedComponent.getPublicInstance()
+
+    componentInstance = instantiateReactComponent(element, false)
+            instance = new ReactCompositeComponentWrapper(element); = this.construct(element);
+
+            construct in ReactCompositeComponent(.src/renderers/shared/stack/reconciler/ReactCompositeComponent.js)
+            instance._currentElement = element
+            instance._rootNodeID = 0
+            instance._mountOrder = 0
+            instance._mountIndex = 0
+            instance._mountImage = null
+
+            return instance
+
+    ReactUpdates.batchedUpdates(            //(./src/renderers/shared/stack/reconciler/ReactUpdates.js)
+      batchedMountComponentIntoNode,    //function
+      componentInstance,    //instance
+      container,            //dom
+      shouldReuseMarkup,    //false
+      context                //null
+    );
+
+        function batchedUpdates(callback, a, b, c, d, e) {
+          ensureInjected();
+          return batchingStrategy.batchedUpdates(callback, a, b, c, d, e);
+        }
+
+        var ReactDefaultBatchingStrategy = {
+          isBatchingUpdates: false,
+
+          /**
+           * Call the provided function in a context within which calls to `setState`
+           * and friends are batched such that components aren&apos;t updated unnecessarily.
+           */
+          batchedUpdates: function(callback, a, b, c, d, e) {
+            var alreadyBatchingUpdates = ReactDefaultBatchingStrategy.isBatchingUpdates;
+
+            ReactDefaultBatchingStrategy.isBatchingUpdates = true;
+
+            // The code is written this way to avoid extra allocations
+            if (alreadyBatchingUpdates) {
+              return callback(a, b, c, d, e);
+            } else {
+              return transaction.perform(callback, null, a, b, c, d, e);
+            }
+          },
+        };
+
+    batchedMountComponentIntoNode(instance, dom, false, null)
+        transaction = ReactUpdates.ReactReconcileTransaction.getPooled(true)
+            getPooled = oneArgumentPooler
+                return new this(true) = new ReactReconcileTransaction(true)
+                    this.reinitializeTransaction();
+                        this.transactionWrappers = this.getTransactionWrappers();
+                        this.wrapperInitData = [];
+                        this._isInTransaction = false;
+                    this.renderToStaticMarkup = false;
+                    this.reactMountReady = CallbackQueue.getPooled(null);    = new CallbackQueue()
+                    this.useCreateElement = useCreateElement; = true;
+
+        transaction.perform(
+            mountComponentIntoNode,        //function
+            null,
+            componentInstance,            //instance
+            container,                    //dom
+            transaction,                //
+            shouldReuseMarkup,            //false
+            context                        //null
+        );
+            perform: function (method, scope, a, b, c, d, e, f) 
+                transaction._isInTransaction = true
+                this.initializeAll(0)
+                method.call(null, ...args) = mountComponentIntoNode
+            function mountComponentIntoNode(wrapperInstance, container, transaction,shouldReuseMarkup,context)
+                var markup = ReactReconciler.mountComponent(wrapperInstance, transaction, null, 
+                    ReactDOMContainerInfo(wrapperInstance, container), false, null)
+                        ReactDomContainerInfo = info = {
+                            _topLevelWrapper: topLevelWrapper,    //wrapperInstance
+                            _idCounter: 1,
+                            _ownerDocument: node ? node.nodeType === DOC_NODE_TYPE ? node : node.ownerDocument : null,// node.ownerDocument 
+                            _node: node,
+                            _tag: node ? node.nodeName.toLowerCase() : null,    //DIV
+                            _namespaceURI: node ? node.namespaceURI : null,        //http://www.w3.org/1999/xhtml
+                          };
+
+                          var markup = warpperInstance.mountComponent(transaction, null, info, null, 0)
+                                      = instance.mountComponent
+                                  this._context = null
+                                  this._hostParent = null
+                                  this._hostContainerInfo = info
+                                  this._mountOrder = nextMountID++ = 2
+
+                                  var publicProps = this._currentElement.props;
+                                  var publicContext = this._processContext(context);    //emptyObject
+                                      var maskedContext = this._maskContext(context);
+                                          var Component = this._currentElement.type;
+                                          var contextTypes = Component.contextTypes;    //emptyObject
+
+                                  var Component = this._currentElement.type;
+                                  var updateQueue = transaction.getUpdateQueue();        
+                                      ReactUpdateQueue(./src/renderers/shared/stack/reconciler/ReactUpdateQueue.js)
+
+                                  var doConstruct = shouldConstruct(Component); = true;
+
+                                  var inst = this._constructComponent(true, props, context, updateQueue)
+                                      //_constructComponentWithoutOwner
+                                      var Component = this._currentElement.type;
+                                      return new Component(publicProps, publicContext, updateQueue);
+                                          new this._currentElement.type(emptyObject, updateQueue);
+                                          new TopLevelWrapper({}, updateQueue);
+
+                                  this._compositeType = ReactCompositeComponentTypes.ImpureClass;
+                                  inst.props = publicProps;    
+                                inst.context = publicContext;
+                                inst.refs = emptyObject;
+                                inst.updater = updateQueue;
+
+                                this._instance = inst;
+                                ReactInstanceMap.set(inst, this);
+                                    inst._reactInternalInstance = this;
+
+                                var initialState = inst.state;    //null
+                                if inst.componentWillMount then inst.componentWillMount()
+                                if inst._pendingStateQueue then inst.state = this._processPendingState(inst.props, inst.context);
+
+                                markup = this.performInitialMount(
+                                    renderedElement,
+                                    hostParent,
+                                    hostContainerInfo,
+                                    transaction,
+                                    context
+                                );
+                                if inst.componentDidMount then transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
+
+                                if this._pendingCallbacks then this._pendingCallbacks = null &amp; 
+                                    transaction.getReactMountReady().enqueue(
+                                      callbacks[i],
+                                      inst
+                                    );
+                                return markup
+
+
+                wrapperInstance._renderedComponent._topLevelWrapper = wrapperInstance;
+                ReactMount._mountImageIntoNode(
+                    markup,
+                    container,
+                    wrapperInstance,
+                    shouldReuseMarkup,
+                    transaction
+                );
+
+
+
+          ReactUpdates.ReactReconcileTransaction.release(transaction);
+
+
+    instancesByReactRootID[wrapperID] = componentInstance;
+    return componentInstance
+</code></pre>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/02/21/react源码阅读/">
+    <time datetime="2017-02-21T07:41:27.000Z" class="entry-date">
+        2017-02-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+    
+        <span class="nav-next"><a href="/2017/02/21/react-redux源码阅读/" rel="next">react-redux源码阅读 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    <aside id="search" class="widget widget_search"><form role="search" method="get" accept-charset="utf-8" id="searchform" class="searchform" action="//google.com/search">
+    <div>
+        <input type="text" value="" name="s" id="s" />
+        <input type="submit" id="searchsubmit" value="搜索" />
+    </div>
+</form></aside>
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/2017/02/21/react源码阅读/">react源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/react-redux源码阅读/">react-redux源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/redux源码阅读/">redux源码阅读</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-content">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux-源码/">redux 源码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-content tagcloud">
+      <a href="/tags/redux-源码/" style="font-size: 10px;">redux 源码</a>
+    </div>
+  </aside>
+
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 Wilson
+    All rights reserved.</p>
+    <p>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></p>
+</footer>
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<script src="/js/navigation.js"></script>
+
+<div id="bg"></div>
+
+  </div>
+</body>
+</html>

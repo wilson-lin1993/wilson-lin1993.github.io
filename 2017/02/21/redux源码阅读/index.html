@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <meta name="description" content="createStore创建store该方法接受三个参数, reducer, preloadedState, enhancer
+第三个参数即生成的中间件函数，如果不为空，则调用这个函数
+
+该创建函数存储reducer方法、初始化数据
+store对象使用currentState存储state， curr" />
+  
+
+  
+  
+  
+  
+  
+  
+  <title>redux源码阅读 | Wilson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="createStore创建store该方法接受三个参数, reducer, preloadedState, enhancer
+第三个参数即生成的中间件函数，如果不为空，则调用这个函数
+
+该创建函数存储reducer方法、初始化数据
+store对象使用currentState存储state， currentReducer存储reducer
+currentListeners用来存储listener方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redux源码阅读">
+<meta property="og:url" content="wilson-lin1993.github.io/2017/02/21/redux源码阅读/index.html">
+<meta property="og:site_name" content="Wilson">
+<meta property="og:description" content="createStore创建store该方法接受三个参数, reducer, preloadedState, enhancer
+第三个参数即生成的中间件函数，如果不为空，则调用这个函数
+
+该创建函数存储reducer方法、初始化数据
+store对象使用currentState存储state， currentReducer存储reducer
+currentListeners用来存储listener方法">
+<meta property="og:updated_time" content="2017-02-21T05:30:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redux源码阅读">
+<meta name="twitter:description" content="createStore创建store该方法接受三个参数, reducer, preloadedState, enhancer
+第三个参数即生成的中间件函数，如果不为空，则调用这个函数
+
+该创建函数存储reducer方法、初始化数据
+store对象使用currentState存储state， currentReducer存储reducer
+currentListeners用来存储listener方法">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+  <!-- baidu webmaster push -->
+  <script src='//push.zhanzhang.baidu.com/push.js'></script>
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+    <hgroup>
+      <h1 class="site-title">
+        <a href="/" title="Wilson" rel="home">Wilson</a>
+      </h1>
+      
+
+      
+    </hgroup>
+
+    <nav id="site-navigation" class="main-navigation" role="navigation">
+            <button class="menu-toggle">菜单</button>
+            <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+            <div class="menu-main-container">
+                <ul id="menu-main" class="nav-menu">
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">Home</a></li>
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">Archives</a></li>
+                
+                </ul>
+            </div>
+    </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-redux源码阅读" class="post-redux源码阅读 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      redux源码阅读
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/redux源码阅读/" data-id="cizggy3pp0001cve8gr8bjspc" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h1 id="createStore"><a href="#createStore" class="headerlink" title="createStore"></a>createStore</h1><h1 id="创建store"><a href="#创建store" class="headerlink" title="创建store"></a>创建store</h1><pre><code>该方法接受三个参数, reducer, preloadedState, enhancer
+第三个参数即生成的中间件函数，如果不为空，则调用这个函数
+
+该创建函数存储reducer方法、初始化数据
+store对象使用currentState存储state， currentReducer存储reducer
+currentListeners用来存储listener方法，即currentState发生变化时要通知的监听函数
+ensureCanMutateNextListeners、subscribe这两个方法都是用来处理listeners
+
+store.dispatch方法调用currentReducer方法， 并在获得新的currentState后执行监听方法
+如果有中间件，则store.dispatch作为包装后的dispatch方法的最后一层
+</code></pre><h1 id="combineReducers"><a href="#combineReducers" class="headerlink" title="combineReducers"></a>combineReducers</h1><h1 id="合并reducer"><a href="#合并reducer" class="headerlink" title="合并reducer"></a>合并reducer</h1><pre><code>该方法接受reducers对象，使用key来作为新对象的key，该合并方法将返回一个combination方法
+该方法用来接受dispatch方法，即store.dispatch方法调用
+
+其中关键部分代码
+for (let i = 0; i &lt; finalReducerKeys.length; i++) {
+  const key = finalReducerKeys[i]
+  const reducer = finalReducers[key]
+  const previousStateForKey = state[key]
+  const nextStateForKey = reducer(previousStateForKey, action)
+  if (typeof nextStateForKey === &apos;undefined&apos;) {
+    const errorMessage = getUndefinedStateErrorMessage(key, action)
+    throw new Error(errorMessage)
+  }
+  nextState[key] = nextStateForKey
+  hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+}
+循环执行reducer方法，并将返回的state结果存储在key对应的nextState中
+最后返回这个nextState
+</code></pre><h1 id="bindActionCreators"><a href="#bindActionCreators" class="headerlink" title="bindActionCreators"></a>bindActionCreators</h1><h1 id="绑定action构造方法"><a href="#绑定action构造方法" class="headerlink" title="绑定action构造方法"></a>绑定action构造方法</h1><pre><code>function bindActionCreator(actionCreator, dispatch) {
+      return (...args) =&gt; dispatch(actionCreator(...args))
+}
+执行action构建方法
+
+for (let i = 0; i &lt; keys.length; i++) {
+    const key = keys[i]
+    const actionCreator = actionCreators[key]
+    if (typeof actionCreator === &apos;function&apos;) {
+          boundActionCreators[key] = bindActionCreator(actionCreator, dispatch)
+    }
+  }
+  过滤非function类型的参数，同时使用boundActionCreators数组来存储生成的dispatch方法
+</code></pre><h1 id="applyMiddleware"><a href="#applyMiddleware" class="headerlink" title="applyMiddleware"></a>applyMiddleware</h1><h1 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h1><pre><code>applyMiddleware方法用来生成中间件
+返回一个方法，该方法接受一个参数，为createStore方法， 该方法将在执行createStore时进行判断，如果存在中间件，则执行这个applyMiddleware生成的方法，并将createStore作为参数传入
+const store = createStore(reducer, preloadedState, enhancer)
+首先调用createStore创建一个store
+let dispatch = store.dispatch
+这里的dispatch是store默认的dispatch
+中间件接受两个参数， 分别是getState和dispatch
+const middlewareAPI = {
+  getState: store.getState,
+  dispatch: (action) =&gt; dispatch(action)
+}
+store.getState 获取store存储的state
+
+接下来使用chain存储中间件方法第一次执行的结果，每个中间件都会返回一个方法
+附一段中间件方法
+function earlyDispatch({ dispatch }) {
+  dispatch(addTodo(&apos;Hello&apos;))
+  return () =&gt; action =&gt; action
+}
+
+接着使用compose生成middlewares的连续执行方法（越后面越先执行)
+</code></pre><h1 id="compose"><a href="#compose" class="headerlink" title="compose"></a>compose</h1><h1 id="合并中间件方法"><a href="#合并中间件方法" class="headerlink" title="合并中间件方法"></a>合并中间件方法</h1><pre><code>这部分代码很简单，主要语句
+funcs.reduce((a, b) =&gt; (...args) =&gt; a(b(...args)))
+通过reduce循环执行中间件方法，从后往前执行，其中b为前一次（即后面一个）的中间件方法
+</code></pre>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/02/21/redux源码阅读/">
+    <time datetime="2017-02-21T04:50:09.000Z" class="entry-date">
+        2017-02-21
+    </time>
+</a>
+    
+    
+  <span class="article-delim">&#8226;</span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redux-源码/">redux 源码</a></li></ul>
+
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/2017/02/21/react-redux源码阅读/" rel="prev"><span class="meta-nav">←</span> react-redux源码阅读</a></span>
+    
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    <aside id="search" class="widget widget_search"><form role="search" method="get" accept-charset="utf-8" id="searchform" class="searchform" action="//google.com/search">
+    <div>
+        <input type="text" value="" name="s" id="s" />
+        <input type="submit" id="searchsubmit" value="搜索" />
+    </div>
+</form></aside>
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/2017/02/21/react源码阅读/">react源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/react-redux源码阅读/">react-redux源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/redux源码阅读/">redux源码阅读</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-content">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux-源码/">redux 源码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-content tagcloud">
+      <a href="/tags/redux-源码/" style="font-size: 10px;">redux 源码</a>
+    </div>
+  </aside>
+
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 Wilson
+    All rights reserved.</p>
+    <p>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></p>
+</footer>
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<script src="/js/navigation.js"></script>
+
+<div id="bg"></div>
+
+  </div>
+</body>
+</html>
