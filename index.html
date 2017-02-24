@@ -11,14 +11,14 @@
   
   
   
-  <title>Wilson</title>
+  <title>说书人</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
-<meta property="og:title" content="Wilson">
+<meta property="og:title" content="说书人">
 <meta property="og:url" content="wilson-lin1993.github.io/index.html">
-<meta property="og:site_name" content="Wilson">
+<meta property="og:site_name" content="说书人">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Wilson">
+<meta name="twitter:title" content="说书人">
   
   
     <link rel="icon" href="/css/images/favicon.ico">
@@ -35,7 +35,7 @@
       <header id="masthead" class="site-header" role="banner">
     <hgroup>
       <h1 class="site-title">
-        <a href="/" title="Wilson" rel="home">Wilson</a>
+        <a href="/" title="说书人" rel="home">说书人</a>
       </h1>
       
 
@@ -74,7 +74,7 @@
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react源码阅读/" data-id="cizggy3ps0002cve8htgs10e6" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react源码阅读/" data-id="cizj8z0ko0000926dedq09gt1" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
@@ -123,6 +123,9 @@ shouldReuseMarkup = false
 
 component = ReactMount._renderNewRootComponent(nextWrappedElement, container, false, null, null)
             ._renderedComponent.getPublicInstance()
+                _renderedComponent = child = instance
+                instance.getPublicInstance function
+                    return this._instance = new TopLevelWrapper({}, updateQueue)
 
     componentInstance = instantiateReactComponent(element, false)
             instance = new ReactCompositeComponentWrapper(element); = this.construct(element);
@@ -245,7 +248,11 @@ component = ReactMount._renderNewRootComponent(nextWrappedElement, container, fa
 
                                 var initialState = inst.state;    //null
                                 if inst.componentWillMount then inst.componentWillMount()
+                                    this.classNameAndNodeQueue = [];
+                                    this.transitionTimeouts = [];
                                 if inst._pendingStateQueue then inst.state = this._processPendingState(inst.props, inst.context);
+                                    this._pendingStateQueue tran to nextState
+                                    return nextState
 
                                 markup = this.performInitialMount(
                                     renderedElement,
@@ -254,7 +261,41 @@ component = ReactMount._renderNewRootComponent(nextWrappedElement, container, fa
                                     transaction,
                                     context
                                 );
+                                    renderedElement = this._renderValidatedComponent();
+                                    this._renderValidatedComponentWithoutOwnerOrContext();
+                                        var inst = this._instance
+                                        renderedElement = inst.render();    //TopLevelWrapper.render()
+                                                                            //this.props.child //App
+                                        return renderedElement
+                                    var nodeType = ReactNodeTypes.getType(renderedElement);
+                                    this._renderedNodeType = nodeType;
+                                    var child = this._instantiateReactComponent(renderedElement,
+                                    nodeType !== ReactNodeTypes.EMPTY)
+                                        instantiateReactComponent function(/src/renderers/shared/stack/reconciler/instantiateReactComponent.js)
+                                        return instance
+
+                                    this._renderedComponent = child
+
+                                    var markup = ReactReconciler.mountComponent(
+                                      child,
+                                      transaction,
+                                      hostParent,
+                                      hostContainerInfo,
+                                      this._processChildContext(context),
+                                      debugID
+                                    );
+
+                                        markup = internalInstance.mountComponenet(...args);
+                                                = child.mountComponent(...args);
+                                                = ReactCompositeComponent.mountComponent
+                                                = this page mountComponent
+                                            return markup (循环调用？？？)
+                                    return markup
+
                                 if inst.componentDidMount then transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
+                                    getReactMountReady() =&gt; return this.reactMountReady
+                                    enqueue function(./src/renderers/shared/stack/reconciler/ReactMultiChild.js)
+                                    inst.componentDidMount.push(inst)
 
                                 if this._pendingCallbacks then this._pendingCallbacks = null &amp; 
                                     transaction.getReactMountReady().enqueue(
@@ -272,6 +313,7 @@ component = ReactMount._renderNewRootComponent(nextWrappedElement, container, fa
                     shouldReuseMarkup,
                     transaction
                 );
+                return markup
 
 
 
@@ -280,6 +322,33 @@ component = ReactMount._renderNewRootComponent(nextWrappedElement, container, fa
 
     instancesByReactRootID[wrapperID] = componentInstance;
     return componentInstance
+
+
+jsx
+    React.createElement(&quot;div&quot;, null)
+        return element = {
+            type: &quot;div&quot;
+        }
+
+instantiateReactComponent(jsx)
+    ReactHostComponent.createInternalComponent(element);
+        return new genericComponentClass(element);
+            new ReactDOMComponent(element)    //(./src/renderers/dom/stack/client/ReactDOMComponent.js)
+            this._currentElement = element
+            this._tag = &quot;DIV&quot;
+
+        this.mountComponent return mountImage
+            el = ownerDocument.createElement(type);
+                document.createElement(&quot;div&quot;)
+
+            ReactDOMComponentTree.precacheNode(this, el);
+            this._updateDOMProperties(null, props, transaction, isCustomComponentTag);
+            var lazyTree = DOMLazyTree(el);
+                {node: noe, children: [], html: null, text null, toString}
+            this._createInitialChildren(transaction, props, context, lazyTree);
+
+            mountImage ＝ lazyTree
+            判断绑定属性 onClick
 </code></pre>
       
     </div><!-- .entry-content -->
@@ -316,7 +385,7 @@ component = ReactMount._renderNewRootComponent(nextWrappedElement, container, fa
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react-redux源码阅读/" data-id="cizggy3pl0000cve89bppsw7e" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react-redux源码阅读/" data-id="cizj8z0kw0002926dty0lq93q" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
@@ -415,7 +484,7 @@ isPlainObject
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/redux源码阅读/" data-id="cizggy3pp0001cve8gr8bjspc" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/redux源码阅读/" data-id="cizj8z0kt0001926dlur0bhtz" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
