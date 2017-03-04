@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <meta name="description" content="desc一个用来替代react-thunk的库， 异步调用action
+takeEverydeprecate(takeEveryHelper, deprecationWarning(&amp;apos;takeEvery&amp;apos;))
+=    takeEveryHelper(...args)
+takeE" />
+  
+
+  
+  
+  
+  
+  
+  
+  <title>react-sage教程 | 说书人</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="desc一个用来替代react-thunk的库， 异步调用action
+takeEverydeprecate(takeEveryHelper, deprecationWarning(&amp;apos;takeEvery&amp;apos;))
+=    takeEveryHelper(...args)
+takeEveryHelper
+---
+    function(patternOrChannel, work">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react-sage教程">
+<meta property="og:url" content="wilson-lin1993.github.io/2017/03/02/react-sage教程/index.html">
+<meta property="og:site_name" content="说书人">
+<meta property="og:description" content="desc一个用来替代react-thunk的库， 异步调用action
+takeEverydeprecate(takeEveryHelper, deprecationWarning(&amp;apos;takeEvery&amp;apos;))
+=    takeEveryHelper(...args)
+takeEveryHelper
+---
+    function(patternOrChannel, work">
+<meta property="og:updated_time" content="2017-03-04T09:40:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react-sage教程">
+<meta name="twitter:description" content="desc一个用来替代react-thunk的库， 异步调用action
+takeEverydeprecate(takeEveryHelper, deprecationWarning(&amp;apos;takeEvery&amp;apos;))
+=    takeEveryHelper(...args)
+takeEveryHelper
+---
+    function(patternOrChannel, work">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+  <!-- baidu webmaster push -->
+  <script src='//push.zhanzhang.baidu.com/push.js'></script>
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+    <hgroup>
+      <h1 class="site-title">
+        <a href="/" title="说书人" rel="home">说书人</a>
+      </h1>
+      
+
+      
+    </hgroup>
+
+    <nav id="site-navigation" class="main-navigation" role="navigation">
+            <button class="menu-toggle">菜单</button>
+            <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+            <div class="menu-main-container">
+                <ul id="menu-main" class="nav-menu">
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">Home</a></li>
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">Archives</a></li>
+                
+                </ul>
+            </div>
+    </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-react-sage教程" class="post-react-sage教程 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      react-sage教程
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/react-sage教程/" data-id="cizv26o6v0000886dtky5ol4s" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h2 id="desc"><a href="#desc" class="headerlink" title="desc"></a>desc</h2><pre><code>一个用来替代react-thunk的库， 异步调用action
+</code></pre><h2 id="takeEvery"><a href="#takeEvery" class="headerlink" title="takeEvery"></a>takeEvery</h2><pre><code>deprecate(takeEveryHelper, deprecationWarning(&apos;takeEvery&apos;))
+=    takeEveryHelper(...args)
+takeEveryHelper
+---
+    function(patternOrChannel, worker, ...args)
+    patternOrChannel maybe a name string, worker is a async function
+        const yTake = {done: false, value: take(patternOrChannel)}
+        const yFork = ac =&gt; ({done: false, value: fork(worker, ...args, ac)})
+        //create generator function
+        let action, setAction = ac =&gt; action = ac
+        return fsmIterator({
+            q1() { return [&apos;q2&apos;, yTake, setAction] },
+            q2() { return action === END ? [qEnd] : [&apos;q1&apos;, yFork(action)] }
+                //END = {type: CHANNEL_END_TYPE} = {type: &apos;@@redux-saga/CHANNEL_END&apos;}
+        }, &apos;q1&apos;, `takeEvery(${safeName(patternOrChannel)}, ${worker.name})`)
+</code></pre><h2 id="fsmIterator-qEnd"><a href="#fsmIterator-qEnd" class="headerlink" title="fsmIterator        //qEnd = {}"></a>fsmIterator        //qEnd = {}</h2><pre><code>function(fsm, q0, name = &apos;iterator&apos;)
+let updateState, qNext = q0
+function next(arg, error)
+    if qNext === qEnd //执行到最后一个next方法
+        return done
+    updateState &amp;&amp; updateState(arg)    //执行updateState方法
+    let [q, output, _updateState] = fsm[qNext]()
+        //fsm[qNext] = fsm[&apos;q1&apos;] = function return [&apos;q2&apos;, yTake, setAction]
+    qNext = q //next 方法 &apos;q2&apos;
+    updateState = _updateState //updateState 方法也等于上一个方法返回的方法
+                                // setAction
+    return qNext === qEnd ? done : output //如果结束返回done, 否则返回output
+                                //return yTake
+
+return makeIterator(next, error function, name, true)
+    = {name, next, error, return: KReturn}
+</code></pre><h2 id="makeIterator"><a href="#makeIterator" class="headerlink" title="makeIterator"></a>makeIterator</h2><pre><code>function(next, thro, name, isHelper)
+const iterator = {name, next, throw: thro, return: kReturn}
+    KReturn is a return next obj function
+    const kReturn = value =&gt; ({value, done: true})
+
+iterator[HELPER] = true // HELPER = sym(&apos;HELPER&apos;) //@@redux-saga/HELPER
+    sym = id =&gt; `@@redux-saga/${id}`
+
+iterator[Symbol.iterator] = () =&gt; iterator  //做个缓存，如果支持Symbol
+return iterator
+</code></pre><h2 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h2><pre><code>function(fn, ...args)
+effect(FORK, getFnCallDesc(&apos;fork&apos;, fn, args))
+getFnCallDesc
+---
+    check(fn, is.notUndef, warn string)
+    if(is.array(fn)) {
+        [context, fn] = fn
+    } else if(fn.fn) {
+        ({context, fn} = fn)
+    }
+    check(fn,is.func, warn string)
+    return {context, fn, args}
+
+effect
+---
+    function(type, payload)
+    return ({[IO]: true, [type]: payload})
+        //sym(&apos;IO&apos;)
+        ({[sym[&apos;IO&apos;]: true, [&apos;FORK&apos;]: {context, fn, args}]})
+    example
+    ---
+        type = FORK = &apos;FORK&apos;
+        payload = {context, fn, args}
+            //{context, fn} = fn = worker = async function
+</code></pre><h2 id="check"><a href="#check" class="headerlink" title="check"></a>check</h2><pre><code>function(value, predicate, warn string)
+isn&apos;t predicate(value)? then
+    warn
+</code></pre><h2 id="deprecate"><a href="#deprecate" class="headerlink" title="deprecate"></a>deprecate</h2><pre><code>function(fn, deprecationWarning)
+return a function, this function run fn(...args)
+</code></pre><h2 id="deprecationWarning"><a href="#deprecationWarning" class="headerlink" title="deprecationWarning"></a>deprecationWarning</h2><pre><code>this function is create warning string with helperName
+</code></pre><h2 id="delay"><a href="#delay" class="headerlink" title="delay"></a>delay</h2><pre><code>return new Promise function
+    this function setTimeout run resolve()
+</code></pre><h2 id="put"><a href="#put" class="headerlink" title="put"></a>put</h2><pre><code>function(channel, action)
+check channel is notUndef &amp;&amp; channel
+check action is notUndef
+return effect(PUT, {channel, action})
+    //({[sym[&apos;IO&apos;]: true, [&apos;PUT&apos;]: {channel, action}]})
+    // 
+</code></pre><h2 id="createSagaMiddleware-sagaMiddlewareFactory"><a href="#createSagaMiddleware-sagaMiddlewareFactory" class="headerlink" title="createSagaMiddleware //sagaMiddlewareFactory"></a>createSagaMiddleware //sagaMiddlewareFactory</h2><pre><code>let runSagaDynamically
+  const {sagaMonitor} = options
+
+  sageMiddleware function ({getState, dispatch})    //redux applyMiddleware function
+      runSagaDynamically = runSaga
+    const sagaEmitter = emitter()
+    sagaEmitter.emit = (options.emitter || ident)(sagaEmitter.emit)
+    const sagaDispatch = wrapSagaDispatch(dispatch)
+        //return function(dispatch) 
+            const wrappedAction = Object.defineProperty(action, SAGA_ACTION, { value: true })
+                action.sym(&apos;SAGA_ACTION&apos;) = { value: true }
+                wrappedAction = action
+            return dispatch(wrappedAction)
+    function runSaga(saga, args, sagaId) {
+      return proc(
+        saga(...args),
+        sagaEmitter.subscribe,
+        sagaDispatch,
+        getState,
+        options,
+        sagaId,
+        saga.name
+      )
+    }
+    return next =&gt; action =&gt; {
+      if(sagaMonitor) {
+        sagaMonitor.actionDispatched(action)
+      }
+      const result = next(action) // hit reducers
+      sagaEmitter.emit(action)    //循环执行 subscribes 方法
+      return result
+    }
+
+  sagaMiddleware.run = (sage, ...args) function
+      const effectId = nextSagaId()
+    if(sagaMonitor) {
+      sagaMonitor.effectTriggered({effectId , root: true, parentEffectId: 0, effect: {root: true, saga, args}})
+    }
+    const task = runSagaDynamically(saga, args, effectId)
+        //runSaga(sage, args, effectId)
+        // return proc(sage(...args), subscribe function//添加sub, ...)
+    if(sagaMonitor) {
+      sagaMonitor.effectResolved(effectId, task)
+    }
+    return task
+
+  return sagaMiddleware
+</code></pre><h2 id="emitter"><a href="#emitter" class="headerlink" title="emitter"></a>emitter</h2><pre><code>return two function
+    {
+        subscribe,
+        emit
+    }
+
+subscribe
+---
+    subscribers.push(sub)
+    return remove sub function
+emit
+---
+    emit function(item)
+    run each subscribers function with (item)
+        subscribers[i](item)
+</code></pre><h2 id="proc"><a href="#proc" class="headerlink" title="proc"></a>proc</h2><pre><code>function(iterator, subscribe, dispatch, getState, options, parentEffectId, name, cont)
+const {sagaMonitor, logger, onError} = options
+  const log = logger || _log
+  const stdChannel = _stdChannel(subscribe)
+      //stdChannel(subscribe)
+
+  next.cancel = noop
+  return task = new Task(parentEffectId, name, iterator, cont)
+  const mainTask = {name, cancel: cancelMain, isRunning: true}
+  const taskQueue = forkQueue(name, mainTask, end)
+</code></pre><h2 id="stdChannel"><a href="#stdChannel" class="headerlink" title="stdChannel"></a>stdChannel</h2><pre><code>function(subscribe)
+return {
+...chan,
+take(cb, matcher) {
+  if(arguments.length &gt; 1) {
+    check(matcher, is.func, &apos;channel.take\&apos;s matcher argument must be a function&apos;)
+    cb[MATCH] = matcher
+  }
+  chan.take(cb)
+}
+</code></pre><p>  }</p>
+<h2 id="chan-function"><a href="#chan-function" class="headerlink" title="  chan function"></a>  chan function</h2><pre><code>  eventChannel(cb =&gt; subscribe(input =&gt; {
+    if (input[SAGA_ACTION]) {
+      cb(input)
+      return
+    }
+    asap(() =&gt; cb(input))
+}))
+
+eventChannel function(subscribe) //subscribe = cb =&gt; subscribe(input ...) a new subscribe function
+---
+    return {
+        take: chan.take,
+        flush: chan.flush,
+        close: () =&gt; {
+            chan.close()        //清空takers， 并执行takers each function with (END)
+            unsubscribe()
+    }
+    taskers 一个有限长度的存储空间 buffer， 从头到尾存取的循环队列
+    chan.take function(cb)        //取出头数据
+        takers.push(cb)
+          cb.cancel = () =&gt; remove(takers, cb)
+      chan.flush function(cb)        //取出所有数据，清空队列
+          cb(buffer.flush())
+</code></pre>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/03/02/react-sage教程/">
+    <time datetime="2017-03-02T03:37:35.000Z" class="entry-date">
+        2017-03-02
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+    
+        <span class="nav-next"><a href="/2017/03/02/mobx源码阅读/" rel="next">mobx源码阅读 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    <aside id="search" class="widget widget_search"><form role="search" method="get" accept-charset="utf-8" id="searchform" class="searchform" action="//google.com/search">
+    <div>
+        <input type="text" value="" name="s" id="s" />
+        <input type="submit" id="searchsubmit" value="搜索" />
+    </div>
+</form></aside>
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/2017/03/02/react-sage教程/">react-sage教程</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/02/mobx源码阅读/">mobx源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/react源码阅读/">react源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/react-redux源码阅读/">react-redux源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/redux源码阅读/">redux源码阅读</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-content">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux-源码/">redux 源码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-content tagcloud">
+      <a href="/tags/redux-源码/" style="font-size: 10px;">redux 源码</a>
+    </div>
+  </aside>
+
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 Wilson
+    All rights reserved.</p>
+    <p>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></p>
+</footer>
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<script src="/js/navigation.js"></script>
+
+<div id="bg"></div>
+
+  </div>
+</body>
+</html>

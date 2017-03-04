@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <meta name="description" content="Atomclass Atom extends BaseAtom implements IAtom 
+    reportObserved
+    ---
+        startBatch();
+        BaeAtom.reportObserved(); == reportObserved" />
+  
+
+  
+  
+  
+  
+  
+  
+  <title>mobx源码阅读 | 说书人</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Atomclass Atom extends BaseAtom implements IAtom 
+    reportObserved
+    ---
+        startBatch();
+        BaeAtom.reportObserved(); == reportObserved(this);
+
+        if !this.isBeingTracked">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mobx源码阅读">
+<meta property="og:url" content="wilson-lin1993.github.io/2017/03/02/mobx源码阅读/index.html">
+<meta property="og:site_name" content="说书人">
+<meta property="og:description" content="Atomclass Atom extends BaseAtom implements IAtom 
+    reportObserved
+    ---
+        startBatch();
+        BaeAtom.reportObserved(); == reportObserved(this);
+
+        if !this.isBeingTracked">
+<meta property="og:updated_time" content="2017-03-03T08:22:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mobx源码阅读">
+<meta name="twitter:description" content="Atomclass Atom extends BaseAtom implements IAtom 
+    reportObserved
+    ---
+        startBatch();
+        BaeAtom.reportObserved(); == reportObserved(this);
+
+        if !this.isBeingTracked">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+  <!-- baidu webmaster push -->
+  <script src='//push.zhanzhang.baidu.com/push.js'></script>
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+    <hgroup>
+      <h1 class="site-title">
+        <a href="/" title="说书人" rel="home">说书人</a>
+      </h1>
+      
+
+      
+    </hgroup>
+
+    <nav id="site-navigation" class="main-navigation" role="navigation">
+            <button class="menu-toggle">菜单</button>
+            <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+            <div class="menu-main-container">
+                <ul id="menu-main" class="nav-menu">
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">Home</a></li>
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">Archives</a></li>
+                
+                </ul>
+            </div>
+    </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-mobx源码阅读" class="post-mobx源码阅读 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      mobx源码阅读
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/mobx源码阅读/" data-id="cizv26o7d0002886dg2u36xyn" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h2 id="Atom"><a href="#Atom" class="headerlink" title="Atom"></a>Atom</h2><pre><code>class Atom extends BaseAtom implements IAtom 
+    reportObserved
+    ---
+        startBatch();
+        BaeAtom.reportObserved(); == reportObserved(this);
+
+        if !this.isBeingTracked
+            this.isBeingTracked = true;
+            this.onBecomeObservedHandler(); //noop();
+
+        endBatch();
+        return !!globalState.trackingDerivation;
+
+    reportChanged
+    ---
+        startBatch();
+        propagateChanged(this);
+        endBatch();
+</code></pre><p>propagateChanged, reportObserved, startBatch, endBatch</p>
+<h2 id="in-observable"><a href="#in-observable" class="headerlink" title="in observable"></a>in observable</h2><pre><code>startBatch
+---
+    globalState.inBatch++;
+
+endBatch
+---
+    globalState.inBatch--;
+    if inBatch === 0 then
+        runReactions();
+        const list = globalState.pendingUnobservations;
+            const observable = list[i];
+            observable.isPendingUnobservation = false;
+            if (observable.observers.length === 0) {
+                observable.onBecomeUnobserved();
+                // NOTE: onBecomeUnobserved might push to `pendingUnobservations`
+            }
+        globalState.pendingUnobservations = [];
+
+reportObserved
+---
+    function(observable)
+    const derivation = globalState.trackingDerivation;
+    if derivation !== null then
+        if derivation.runId !== observable.lastAccessedBy
+            observable.lastAccessedBy = derivation.runId;
+            derivation.newObserving![derivation.unboundDepsCount++] = observable;
+    else if observable.observers.length === 0  then
+        queueForUnobservation(observable);
+
+propagateChanged
+---
+    function(observable)
+    if (observable.lowestObserverState === IDerivationState.STALE) return;
+    observable.lowestObserverState = IDerivationState.STALE;
+
+    const observers = observable.observers;
+    let i = observers.length;
+    while (i--) {
+        const d = observers[i];
+        if (d.dependenciesState === IDerivationState.UP_TO_DATE)
+            d.onBecomeStale();
+        d.dependenciesState = IDerivationState.STALE;
+    }
+</code></pre><h2 id="Reaction"><a href="#Reaction" class="headerlink" title="Reaction"></a>Reaction</h2><pre><code>track
+---
+    function(fn)
+    startBatch();
+
+    this._isRunning = true;
+    const result = trackDerivedFunction(this, fn, undefined);
+    this._isRunning = false;
+    this._isTrackPending = false;
+
+    if (isCaughtException(result))
+        this.reportExceptionInDerivation(result.cause);
+
+    endBatch();
+
+dispose
+---
+    //如果发生错误
+    clearObserving(this);
+
+runReactions
+---
+    if (globalState.inBatch &gt; 0 || globalState.isRunningReactions)
+        return;
+    reactionScheduler(runReactionsHelper);
+</code></pre><h2 id="trackDerivedFunction"><a href="#trackDerivedFunction" class="headerlink" title="trackDerivedFunction"></a>trackDerivedFunction</h2><pre><code>function(derivation, context)
+
+changeDependenciesStateTo0(derivation);
+derivation.newObserving = new Array(derivation.observing.length + 100);
+derivation.unboundDepsCount = 0;
+derivation.runId = ++globalState.runId;
+const prevTracking = globalState.trackingDerivation;
+globalState.trackingDerivation = derivation;
+let result;
+try {
+    result = f.call(context);
+} catch (e) {
+    result = new CaughtException(e);
+}
+globalState.trackingDerivation = prevTracking;
+bindDependencies(derivation);
+return result;
+</code></pre><h2 id="changeDependenciesStateTo0"><a href="#changeDependenciesStateTo0" class="headerlink" title="changeDependenciesStateTo0"></a>changeDependenciesStateTo0</h2><pre><code>function(derivation)
+if (derivation.dependenciesState === IDerivationState.UP_TO_DATE) return;
+derivation.dependenciesState = IDerivationState.UP_TO_DATE;
+
+const obs = derivation.observing;
+let i = obs.length;
+while (i--)
+    obs[i].lowestObserverState = IDerivationState.UP_TO_DATE;
+</code></pre><h2 id="bindDependencies"><a href="#bindDependencies" class="headerlink" title="bindDependencies"></a>bindDependencies</h2><pre><code>const prevObserving = derivation.observing;
+const observing = derivation.observing = derivation.newObserving!;
+
+derivation.newObserving = null; // newObserving shouldn&apos;t be needed outside tracking
+
+// Go through all new observables and check diffValue: (this list can contain duplicates):
+//   0: first occurence, change to 1 and keep it
+//   1: extra occurence, drop it
+let i0 = 0, l = derivation.unboundDepsCount;
+for (let i = 0; i &lt; l; i++) {
+    const dep = observing[i];
+    if (dep.diffValue === 0) {
+        dep.diffValue = 1;
+        if (i0 !== i) observing[i0] = dep;
+        i0++;
+    }
+}
+observing.length = i0;
+
+// Go through all old observables and check diffValue: (it is unique after last bindDependencies)
+//   0: it&apos;s not in new observables, unobserve it
+//   1: it keeps being observed, don&apos;t want to notify it. change to 0
+l = prevObserving.length;
+while (l--) {
+    const dep = prevObserving[l];
+    if (dep.diffValue === 0) {
+        removeObserver(dep, derivation);
+    }
+    dep.diffValue = 0;
+}
+
+// Go through all new observables and check diffValue: (now it should be unique)
+//   0: it was set to 0 in last loop. don&apos;t need to do anything.
+//   1: it wasn&apos;t observed, let&apos;s observe it. set back to 0
+while (i0--) {
+    const dep = observing[i0];
+    if (dep.diffValue === 1) {
+        dep.diffValue = 0;
+        addObserver(dep, derivation);
+    }
+}
+</code></pre><h2 id="observale"><a href="#observale" class="headerlink" title="observale"></a>observale</h2><pre><code>=createObservable(v)
+    if (typeof arguments[1] === &quot;string&quot;)
+        return deepDecorator.apply(null, arguments);
+
+    invariant(arguments.length &lt;= 1, getMessage(&quot;m021&quot;));
+    invariant(!isModifierDescriptor(v), getMessage(&quot;m020&quot;));
+
+    if (isObservable(v))
+        return v;
+    const res = deepEnhancer(v, undefined, undefined);
+    if (res !== v)
+        return res;
+    return observable.box(v)
+
+    box
+    ---
+        if (arguments.length &gt; 2)
+            incorrectlyUsedAsDecorator(&quot;box&quot;);    //error
+        return new ObservableValue(value, deepEnhancer, name);
+
+    ObservableValue
+    ---
+        class ObservableValue extends BaseAtom
+            super(name)    // name = &quot;ObservableValue@&quot; + getNextId()
+            this.value = value
+</code></pre><h2 id="autorun"><a href="#autorun" class="headerlink" title="autorun"></a>autorun</h2><pre><code>function(view, scope)
+    if (scope)
+        view = view.bind(scope);
+    const reaction = new Reaction(name, function () {
+        this.track(reactionRunner);
+    });
+    reaction.schedule();
+
+    return reaction.getDisposer();
+
+    reactionRunner
+    ---
+        view(reaction);    
+
+//绑定自动执行函数， 该函数每次变化（或读取？）数值时执行
+//该函数有一个参数，为reaction函数
+</code></pre><h2 id="computed"><a href="#computed" class="headerlink" title="computed"></a>computed</h2><pre><code>if @computed function then
+    return computedDecorator(class, key)
+
+else?    //以后再看
+
+computedDecorator = createComputedDecorator(false) = createClassPropertyDecorator(fn1, fn2, fn3)
+
+fn2 = get function(name)
+---
+    observale = this.$mobx.values[name]
+    return observable.get();
+
+f3 = set function(name, value)
+---
+    this.$mobx.values[name].set(value);
+</code></pre><h2 id="createClassPropertyDecorator"><a href="#createClassPropertyDecorator" class="headerlink" title="createClassPropertyDecorator"></a>createClassPropertyDecorator</h2><pre><code>function(onInitialize, get, set)
+    return classPropertyDecorator function
+        if !descriptor then //如果装饰啟没有第三个参数
+            target.get = get
+            target.set = set
+
+            target.get &amp; set function() {
+                if (!this.__mobxInitializedProps || this.__mobxInitializedProps[key] !== true)
+                    typescriptInitializeProperty(this, key, undefined, onInitialize, customArgs, descriptor);
+                get() || set()
+            }
+</code></pre>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/03/02/mobx源码阅读/">
+    <time datetime="2017-03-02T03:21:54.000Z" class="entry-date">
+        2017-03-02
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/2017/03/02/react-sage教程/" rel="prev"><span class="meta-nav">←</span> react-sage教程</a></span>
+    
+    
+        <span class="nav-next"><a href="/2017/02/21/react源码阅读/" rel="next">react源码阅读 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    <aside id="search" class="widget widget_search"><form role="search" method="get" accept-charset="utf-8" id="searchform" class="searchform" action="//google.com/search">
+    <div>
+        <input type="text" value="" name="s" id="s" />
+        <input type="submit" id="searchsubmit" value="搜索" />
+    </div>
+</form></aside>
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/2017/03/02/react-sage教程/">react-sage教程</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/02/mobx源码阅读/">mobx源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/react源码阅读/">react源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/react-redux源码阅读/">react-redux源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/21/redux源码阅读/">redux源码阅读</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-content">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux-源码/">redux 源码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-content tagcloud">
+      <a href="/tags/redux-源码/" style="font-size: 10px;">redux 源码</a>
+    </div>
+  </aside>
+
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 Wilson
+    All rights reserved.</p>
+    <p>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></p>
+</footer>
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<script src="/js/navigation.js"></script>
+
+<div id="bg"></div>
+
+  </div>
+</body>
+</html>
