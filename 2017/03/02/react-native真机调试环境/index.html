@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <meta name="description" content="andriod1, andriod sdk
+2, java sdk
+3, adb
+4, 配置build.gradle 将dependencies 改为对应版本
+5, 生成签名
+andriod生成签名第一步：生成Android签名证书
+如果你已经有签名证书可以绕过此步骤。签名APK需要一个证书用于为A" />
+  
+
+  
+  
+  
+  
+  
+  
+  <title>react-native真机调试环境 | 说书人</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="andriod1, andriod sdk
+2, java sdk
+3, adb
+4, 配置build.gradle 将dependencies 改为对应版本
+5, 生成签名
+andriod生成签名第一步：生成Android签名证书
+如果你已经有签名证书可以绕过此步骤。签名APK需要一个证书用于为APP签名，生成签名证书可以Android Studio以可视化的方式生成，也可以使用终端采用命令行的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react-native真机调试环境">
+<meta property="og:url" content="wilson-lin1993.github.io/2017/03/02/react-native真机调试环境/index.html">
+<meta property="og:site_name" content="说书人">
+<meta property="og:description" content="andriod1, andriod sdk
+2, java sdk
+3, adb
+4, 配置build.gradle 将dependencies 改为对应版本
+5, 生成签名
+andriod生成签名第一步：生成Android签名证书
+如果你已经有签名证书可以绕过此步骤。签名APK需要一个证书用于为APP签名，生成签名证书可以Android Studio以可视化的方式生成，也可以使用终端采用命令行的">
+<meta property="og:updated_time" content="2017-03-28T05:54:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="react-native真机调试环境">
+<meta name="twitter:description" content="andriod1, andriod sdk
+2, java sdk
+3, adb
+4, 配置build.gradle 将dependencies 改为对应版本
+5, 生成签名
+andriod生成签名第一步：生成Android签名证书
+如果你已经有签名证书可以绕过此步骤。签名APK需要一个证书用于为APP签名，生成签名证书可以Android Studio以可视化的方式生成，也可以使用终端采用命令行的">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+  <!-- baidu webmaster push -->
+  <script src='//push.zhanzhang.baidu.com/push.js'></script>
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+    <hgroup>
+      <h1 class="site-title">
+        <a href="/" title="说书人" rel="home">说书人</a>
+      </h1>
+      
+
+      
+    </hgroup>
+
+    <nav id="site-navigation" class="main-navigation" role="navigation">
+            <button class="menu-toggle">菜单</button>
+            <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+            <div class="menu-main-container">
+                <ul id="menu-main" class="nav-menu">
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">Home</a></li>
+                
+                    <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">Archives</a></li>
+                
+                </ul>
+            </div>
+    </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-react-native真机调试环境" class="post-react-native真机调试环境 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      react-native真机调试环境
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/react-native真机调试环境/" data-id="cj36n11bc00011w6d5h2md6fx" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h2 id="andriod"><a href="#andriod" class="headerlink" title="andriod"></a>andriod</h2><pre><code>1, andriod sdk
+2, java sdk
+3, adb
+4, 配置build.gradle 将dependencies 改为对应版本
+5, 生成签名
+</code></pre><h2 id="andriod生成签名"><a href="#andriod生成签名" class="headerlink" title="andriod生成签名"></a>andriod生成签名</h2><p>第一步：生成Android签名证书</p>
+<p>如果你已经有签名证书可以绕过此步骤。<br>签名APK需要一个证书用于为APP签名，生成签名证书可以Android Studio以可视化的方式生成，也可以使用终端采用命令行的方式生成，需要的可以自行Google这里不再敖述。</p>
+<p>第二步：设置gradle变量</p>
+<p>将你的签名证书copy到 android/app目录下。<br>编辑~/.gradle/gradle.properties或../android/gradle.properties(一个是全局gradle.properties，一个是项目中的gradle.properties，大家可以根据需要进行修改) ，加入如下代码：<br>MYAPP_RELEASE_STORE_FILE=your keystore filename<br>MYAPP_RELEASE_KEY_ALIAS=your keystore alias<br>MYAPP_RELEASE_STORE_PASSWORD=<strong>*</strong><br>MYAPP_RELEASE_KEY_PASSWORD=<strong>*</strong>  </p>
+<p>提示：用正确的证书密码、alias以及key密码替换掉 *。<br>第三步：在gradle配置文件中添加签名配置</p>
+<p>编辑 android/app/build.gradle文件添加如下代码：</p>
+<p>…<br>android {<br>    …<br>    defaultConfig { … }<br>    signingConfigs {<br>        release {<br>            storeFile file(MYAPP_RELEASE_STORE_FILE)<br>            storePassword MYAPP_RELEASE_STORE_PASSWORD<br>            keyAlias MYAPP_RELEASE_KEY_ALIAS<br>            keyPassword MYAPP_RELEASE_KEY_PASSWORD<br>        }<br>    }<br>    buildTypes {<br>        release {<br>            …<br>            signingConfig signingConfigs.release<br>        }<br>    }<br>}<br>…<br>第四步：签名打包APK</p>
+<p>terminal进入项目下的android目录，运行如下代码：<br>./gradlew assembleRelease</p>
+<h2 id="ios"><a href="#ios" class="headerlink" title="ios"></a>ios</h2><pre><code>1, 签名
+2，资源必须是https
+</code></pre>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/03/02/react-native真机调试环境/">
+    <time datetime="2017-03-02T03:21:54.000Z" class="entry-date">
+        2017-03-02
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/2017/03/02/mobx-react源码阅读/" rel="prev"><span class="meta-nav">←</span> mobx-react源码阅读</a></span>
+    
+    
+        <span class="nav-next"><a href="/2017/03/02/react-router Bundle笔记/" rel="next">react-router Bundle笔记 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    <aside id="search" class="widget widget_search"><form role="search" method="get" accept-charset="utf-8" id="searchform" class="searchform" action="//google.com/search">
+    <div>
+        <input type="text" value="" name="s" id="s" />
+        <input type="submit" id="searchsubmit" value="搜索" />
+    </div>
+</form></aside>
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/2017/03/02/react-sage教程/">react-sage教程</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/02/mobx源码阅读/">mobx源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/02/mobx-react源码阅读/">mobx-react源码阅读</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/02/react-native真机调试环境/">react-native真机调试环境</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/02/react-router Bundle笔记/">react-router Bundle笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-content">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/redux-源码/">redux 源码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </aside>
+
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-content tagcloud">
+      <a href="/tags/redux-源码/" style="font-size: 10px;">redux 源码</a>
+    </div>
+  </aside>
+
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 Wilson
+    All rights reserved.</p>
+    <p>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></p>
+</footer>
+    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+<script src="/js/navigation.js"></script>
+
+<div id="bg"></div>
+
+  </div>
+</body>
+</html>

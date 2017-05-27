@@ -74,7 +74,7 @@
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/react-sage教程/" data-id="cj36mvemq0002186d1m048wt4" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/react-sage教程/" data-id="cj36mx8h900011r6d1xhzqv8s" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
@@ -302,7 +302,7 @@ eventChannel function(subscribe) //subscribe = cb =&gt; subscribe(input ...) a n
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/mobx源码阅读/" data-id="cj36mvemj0000186dw1r0aitn" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/mobx源码阅读/" data-id="cj36mx8h500001r6d0bd1l8dj" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
@@ -549,6 +549,256 @@ f3 = set function(name, value)
 
 
   
+    <article id="post-mobx-react源码阅读" class="post-mobx-react源码阅读 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/2017/03/02/mobx-react源码阅读/">mobx-react源码阅读</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/mobx-react源码阅读/" data-id="cj36n0ydx00001w6dcr7q7sle" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h1 id="observer"><a href="#observer" class="headerlink" title="observer"></a>observer</h1><pre><code>observer(arg1, arg2) 
+if typeof arg1 === Array ?回头再看
+
+typeof arg1 === Object
+    const componentClass = arg1;
+    if class&apos;s isMobxInjector == true then warn
+    if !class&apos;s.render &amp;&amp; !class.isReactClass &amp;&amp; !React.Component.isPrototypeOf(componentClass)
+    then
+        return ovserver(React.createClass())
+        创建一个新的react class
+
+    mixinLifecycleEvents(class.prototype || class)
+    return class
+</code></pre><h1 id="mixinLifecycleEvents"><a href="#mixinLifecycleEvents" class="headerlink" title="mixinLifecycleEvents"></a>mixinLifecycleEvents</h1><pre><code>patch(target, &quot;componentWillMount&quot;, true);
+patch(target, [&quot;componentDidMount&quot;, &quot;componentWillUnmount&quot;, &quot;componentDidUpdate&quot;])
+if !target.shouldComponentUpdate then
+    target.shouldComponentUpdate = reactiveMixin.shouldComponentUpdate;
+</code></pre><h1 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h1><pre><code>patch(target, funcName, runMixinFirst = false)
+base = target[funcName]
+mixinFunc = reactiveMixin[funcName]
+if !base
+    target = mixinFunc
+else
+    if runMixinFirst === true then
+        new function = 
+            mixinFunc(); base();
+        else
+            base(); mixinFunc();
+</code></pre><h1 id="reactiveMixin"><a href="#reactiveMixin" class="headerlink" title="reactiveMixin"></a>reactiveMixin</h1><pre><code>componentWillMount
+---
+//首次渲染
+
+    makePropertyObservableReference
+    ---
+        let valueHolder = this[propName];
+          const atom = new Atom(&quot;reactive &quot; + propName);    //Atom class is mobx class
+          this.get: function() {
+              atom.reportObserved();
+              return valueHolder
+          }
+          this.set: function(v) {
+              if (!isForcingUpdate &amp;&amp; isObjectShallowModified(valueHolder, v)) {
+              valueHolder = v;
+              skipRender = true;
+              atom.reportChanged();
+              skipRender = false;
+            } else {
+              valueHolder = v;
+            }
+          }
+      //为对象绑定get, 和set方法
+
+// make this.props an observable reference, see #124
+makePropertyObservableReference.call(this, &quot;props&quot;)
+// make state an observable reference
+makePropertyObservableReference.call(this, &quot;state&quot;)
+
+
+    initialRender
+    ---
+        reaction = new Reaction //this class is mobx class
+        ---
+            try {
+              isForcingUpdate = true;
+              if (!skipRender)
+                React.Component.prototype.forceUpdate.call(this);
+              hasError = false;
+            } finally {
+              isForcingUpdate = false;
+              if (hasError)
+                reaction.dispose();
+            }
+
+    //生成新的render函数
+        reactiveRender.$mobx = reaction;
+          this.render = reactiveRender;
+          return reactiveRender();
+
+    reactiveRender
+    ---
+        reaction.track(() =&gt; {
+            rendering = extras.allowStateChanges(false, baseRender);
+        })
+        return rendering
+
+this.render = initialRender
+
+componentWillUnmount
+----
+    this.render.$mobx &amp;&amp; this.render.$mobx.dispose();
+    this.__$mobxIsUnmounted = true;
+    //标记component 被移除
+
+shouldComponentUpdate
+---
+    function(nextProps, nextState)
+        if this.state !== nextState
+            return true    //如果state发生改变， 则更新component
+        return isObjectShallowModified(this.props, nextProps)
+
+    isObjectShallowModified function 
+    forEach key the props[key] !== nextProps[key] ? 判断props是否发生变化
+</code></pre>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/03/02/mobx-react源码阅读/">
+    <time datetime="2017-03-02T03:21:54.000Z" class="entry-date">
+        2017-03-02
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-react-native真机调试环境" class="post-react-native真机调试环境 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/2017/03/02/react-native真机调试环境/">react-native真机调试环境</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/react-native真机调试环境/" data-id="cj36n11bc00011w6d5h2md6fx" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h2 id="andriod"><a href="#andriod" class="headerlink" title="andriod"></a>andriod</h2><pre><code>1, andriod sdk
+2, java sdk
+3, adb
+4, 配置build.gradle 将dependencies 改为对应版本
+5, 生成签名
+</code></pre><h2 id="andriod生成签名"><a href="#andriod生成签名" class="headerlink" title="andriod生成签名"></a>andriod生成签名</h2><p>第一步：生成Android签名证书</p>
+<p>如果你已经有签名证书可以绕过此步骤。<br>签名APK需要一个证书用于为APP签名，生成签名证书可以Android Studio以可视化的方式生成，也可以使用终端采用命令行的方式生成，需要的可以自行Google这里不再敖述。</p>
+<p>第二步：设置gradle变量</p>
+<p>将你的签名证书copy到 android/app目录下。<br>编辑~/.gradle/gradle.properties或../android/gradle.properties(一个是全局gradle.properties，一个是项目中的gradle.properties，大家可以根据需要进行修改) ，加入如下代码：<br>MYAPP_RELEASE_STORE_FILE=your keystore filename<br>MYAPP_RELEASE_KEY_ALIAS=your keystore alias<br>MYAPP_RELEASE_STORE_PASSWORD=<strong>*</strong><br>MYAPP_RELEASE_KEY_PASSWORD=<strong>*</strong>  </p>
+<p>提示：用正确的证书密码、alias以及key密码替换掉 *。<br>第三步：在gradle配置文件中添加签名配置</p>
+<p>编辑 android/app/build.gradle文件添加如下代码：</p>
+<p>…<br>android {<br>    …<br>    defaultConfig { … }<br>    signingConfigs {<br>        release {<br>            storeFile file(MYAPP_RELEASE_STORE_FILE)<br>            storePassword MYAPP_RELEASE_STORE_PASSWORD<br>            keyAlias MYAPP_RELEASE_KEY_ALIAS<br>            keyPassword MYAPP_RELEASE_KEY_PASSWORD<br>        }<br>    }<br>    buildTypes {<br>        release {<br>            …<br>            signingConfig signingConfigs.release<br>        }<br>    }<br>}<br>…<br>第四步：签名打包APK</p>
+<p>terminal进入项目下的android目录，运行如下代码：<br>./gradlew assembleRelease</p>
+<h2 id="ios"><a href="#ios" class="headerlink" title="ios"></a>ios</h2><pre><code>1, 签名
+2，资源必须是https
+</code></pre>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/03/02/react-native真机调试环境/">
+    <time datetime="2017-03-02T03:21:54.000Z" class="entry-date">
+        2017-03-02
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-react-router Bundle笔记" class="post-react-router Bundle笔记 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/2017/03/02/react-router Bundle笔记/">react-router Bundle笔记</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/03/02/react-router Bundle笔记/" data-id="cj36n14je00021w6dbwi3fa5r" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <bundle load="{loadSomething}"><br>    {children}<br></bundle>
+
+<h2 id="load-function"><a href="#load-function" class="headerlink" title="load function"></a>load function</h2><pre><code>run loadSomething and get result
+render children(result)
+</code></pre><p>loadSomething can use by bundle-loader<br>it will transtion</p>
+<p>function(cb) {<br>    require.ensure([], function(require) {<br>        cb(require(chunkPath))<br>    }, chunkName)<br>}</p>
+<p>chunkPath is a copy file by bundle-loader if you use bundle-loader, such as load!!./src/….</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/2017/03/02/react-router Bundle笔记/">
+    <time datetime="2017-03-02T03:21:54.000Z" class="entry-date">
+        2017-03-02
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
     <article id="post-react源码阅读" class="post-react源码阅读 post type-post status-publish format-standard hentry">
     <!---->
 
@@ -564,7 +814,7 @@ f3 = set function(name, value)
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react源码阅读/" data-id="cj36mvems0003186d0mz4jo3c" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react源码阅读/" data-id="cj36mx8he00031r6d6liq6xsy" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
@@ -875,7 +1125,7 @@ instantiateReactComponent(jsx)
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react-redux源码阅读/" data-id="cj36mvemo0001186d82njlnj6" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/react-redux源码阅读/" data-id="cj36mx8hc00021r6dfidafjty" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
@@ -974,7 +1224,7 @@ isPlainObject
         
         <div class="comments-link">
             
-            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/redux源码阅读/" data-id="cj36mvems0004186dsrkmgwlp" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
+            <a href="javascript:void(0);" data-url="wilson-lin1993.github.io/2017/02/21/redux源码阅读/" data-id="cj36mx8hf00041r6dpujdsuip" class="leave-reply bdsharebuttonbox" data-cmd="more">Share</a>
         </div><!-- .comments-link -->
       </header><!-- .entry-header -->
 
@@ -1100,15 +1350,15 @@ funcs.reduce((a, b) =&gt; (...args) =&gt; a(b(...args)))
           </li>
         
           <li>
-            <a href="/2017/02/21/react源码阅读/">react源码阅读</a>
+            <a href="/2017/03/02/mobx-react源码阅读/">mobx-react源码阅读</a>
           </li>
         
           <li>
-            <a href="/2017/02/21/react-redux源码阅读/">react-redux源码阅读</a>
+            <a href="/2017/03/02/react-native真机调试环境/">react-native真机调试环境</a>
           </li>
         
           <li>
-            <a href="/2017/02/21/redux源码阅读/">redux源码阅读</a>
+            <a href="/2017/03/02/react-router Bundle笔记/">react-router Bundle笔记</a>
           </li>
         
       </ul>
